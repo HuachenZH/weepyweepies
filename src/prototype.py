@@ -26,7 +26,6 @@ for m, zlow, zhigh in [('o', -50, -25), ('^', -30, -5)]:
     xs = randrange(n, 23, 32)
     ys = randrange(n, 0, 100)
     zs = randrange(n, zlow, zhigh)
-    breakpoint()
     ax.scatter(xs, ys, zs, marker=m)
     count += 1
 
@@ -36,4 +35,4 @@ ax.set_xlabel('X Label')
 ax.set_ylabel('Y Label')
 ax.set_zlabel('Z Label')
 
-#plt.show()
+plt.show()
