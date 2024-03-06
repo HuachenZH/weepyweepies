@@ -3,6 +3,9 @@
 ## Info
 - [edge detection using opencv](https://learnopencv.com/edge-detection-using-opencv/)
 - [a library called scikit-image](https://scikit-image.org/)
+- you might need a stronger 3D visualization library other than matplotlib: 
+  - [Pyvista, trimesh, vedo](https://towardsdatascience.com/python-libraries-for-mesh-and-point-cloud-visualization-part-1-daa2af36de30)
+  - [pyviz](https://pyviz.org/scivis/index.html)
 
 ## WBS
 - ~~a very basic 3d scatter plot~~
