@@ -27,19 +27,31 @@ def shitty_edge_detection(path_img:str) -> np.ndarray:
     # Uncomment to inspect the image
     #cv2.imshow('edge detection', edges)
     #cv2.waitKey()
-    breakpoint()
     return edges
 
 
 
-def array2scatter(edges):
-    return
+def array2scatter(edges:np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    return np.where(edges > 250)
+
+
+
+def smash_on_plane_xz(edges):
+    zs, xs = array2scatter(edges)
+    ys = np.zeros(len(zs), dtype=int)
+    return xs, ys, np.flip(zs)
+
 
 
 def main():
-    path_img = "../data/anae.jfif"
+    path_img = "../data/anae_small.jfif"
     edges = shitty_edge_detection(path_img)
-    array2scatter(edges)
+    xs, ys, zs = smash_on_plane_xz(edges)
+    # Prepare for plot
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='3d')
+    ax.scatter(xs, ys, zs, marker='.')
+    plt.show()
     cv2.destroyAllWindows() 
 
 
