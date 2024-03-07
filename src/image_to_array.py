@@ -51,7 +51,7 @@ def array2scatter(edges:np.ndarray) -> tuple[np.ndarray, np.ndarray]:
 
 
 
-def smash_on_plane_xz(edges:np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+def smash_on_plane_xz(edges:np.ndarray, flip_horizontal:bool) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Project an image onto the xz plane.
  
             Parameters:
@@ -74,19 +74,14 @@ def smash_on_plane_xz(edges:np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndar
 
 
 
-def main():
-    path_img = "../data/txt_anae.jpg"
+def img2arr(path_img:str, flip_horizontal:bool) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     edges = shitty_edge_detection(path_img)
-    xs, ys, zs = smash_on_plane_xz(edges)
-    # Prepare for plot
-    fig = plt.figure()
-    ax = fig.add_subplot(projection='3d')
-    ax.scatter(xs, ys, zs, marker='.')
-    plt.show()
-    cv2.destroyAllWindows() 
+    xs, ys, zs = smash_on_plane_xz(edges, flip_horizontal)
+    return xs, ys, zs
 
 
 
 if __name__ == "__main__":
-    main()
+    path_img = "../data/txt_anae.jpg"
+    img2arr()
 
