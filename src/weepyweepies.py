@@ -19,6 +19,8 @@ def shitty_edge_detection(path_img:str) -> np.ndarray:
                     If a pixel is detected as edge, the value is 255. Else it's 0.
     """
     img = cv2.imread(path_img, flags=0)  
+    # Flip image vertically
+    img = cv2.flip(img, 0)
     # Blur the image for better edge detection
     img_blur = cv2.GaussianBlur(img,(3,3), sigmaX=0, sigmaY=0) 
     # Canny Edge Detection
@@ -39,12 +41,12 @@ def array2scatter(edges:np.ndarray) -> tuple[np.ndarray, np.ndarray]:
 def smash_on_plane_xz(edges):
     zs, xs = array2scatter(edges)
     ys = np.zeros(len(zs), dtype=int)
-    return xs, ys, np.flip(zs)
+    return xs, ys, zs
 
 
 
 def main():
-    path_img = "../data/anae_small.jfif"
+    path_img = "../data/txt_quentin.jpg"
     edges = shitty_edge_detection(path_img)
     xs, ys, zs = smash_on_plane_xz(edges)
     # Prepare for plot
