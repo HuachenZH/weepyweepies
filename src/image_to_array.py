@@ -55,11 +55,11 @@ def smash_on_plane(edges:np.ndarray, flip_horizontal:bool, plane:str) -> tuple[n
     """Project an image onto the xz plane.
 
             Parameters:
-                    edges (np.ndarray)): array of the image.
+                    edges (np.ndarray): array of the image.
 
                     flip_horizontal (bool): whether flip the image horizontally or not.
 
-                    plane (str)): to project the image on which plane. Should be either "xz" or "yz".
+                    plane (str): to project the image on which plane. Should be either "xz" or "yz".
 
             Returns:
                     xs, ys, zs (tuple[np.ndarray, np.ndarray, np.ndarray]): a tuple of three numpy arrays.
@@ -88,14 +88,35 @@ def smash_on_plane(edges:np.ndarray, flip_horizontal:bool, plane:str) -> tuple[n
 
 
 
-def img2arr(path_img:str, flip_horizontal:bool) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+def img2arr(path_img:str, flip_horizontal:bool, plane:str) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Turn an image into coordinates of scatter points on a plane (xz or yz).
+
+            Parameters:
+                    edges (np.ndarray): array of the image.
+
+                    flip_horizontal (bool): whether flip the image horizontally or not.
+
+                    plane (str): to project the image on which plane. Should be either "xz" or "yz".
+
+            Returns:
+                    xs, ys, zs (tuple[np.ndarray, np.ndarray, np.ndarray]): a tuple of three numpy arrays.
+                    xs: array of scatter points' x axis coordinate.
+                    ys: array of scatter points' y axis coordinate.
+                    zs: array of scatter points' z axis coordinate.
+                    ----------------
+                    xs: (1, 7, 6, 7, 9)
+                    ys: (3, 4, 9, 7, 0)
+                    zs: (0, 1, 6, 5, 1)
+                         ^  Coordinate of the point: (1, 3, 0)
+    """
     edges = shitty_edge_detection(path_img)
-    xs, ys, zs = smash_on_plane(edges, flip_horizontal)
+    xs, ys, zs = smash_on_plane(edges, flip_horizontal, plane)
     return xs, ys, zs
 
 
 
 if __name__ == "__main__":
     path_img = "../data/txt_anae.jpg"
-    img2arr()
+    xs, ys, zs = img2arr(path_img, True, "xz")
+    breakpoint()
 
