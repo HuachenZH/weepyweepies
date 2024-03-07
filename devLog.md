@@ -24,4 +24,4 @@
 
 
 to resume: plot the second image then make intersection.  
-Maybe use name instead of photo
+image processing part is now separated, image_to_array.py is built. Now you need to rebuild weepyweepie.py
