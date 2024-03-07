@@ -51,12 +51,16 @@ def array2scatter(edges:np.ndarray) -> tuple[np.ndarray, np.ndarray]:
 
 
 
-def smash_on_plane_xz(edges:np.ndarray, flip_horizontal:bool) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+def smash_on_plane(edges:np.ndarray, flip_horizontal:bool, plane:str) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Project an image onto the xz plane.
- 
+
             Parameters:
                     edges (np.ndarray)): array of the image.
- 
+
+                    flip_horizontal (bool): whether flip the image horizontally or not.
+
+                    plane (str)): to project the image on which plane. Should be either "xz" or "yz".
+
             Returns:
                     xs, ys, zs (tuple[np.ndarray, np.ndarray, np.ndarray]): a tuple of three numpy arrays.
                     xs: array of scatter points' x axis coordinate.
@@ -68,15 +72,25 @@ def smash_on_plane_xz(edges:np.ndarray, flip_horizontal:bool) -> tuple[np.ndarra
                     zs: (0, 1, 6, 5, 1)
                          ^  Coordinate of the point: (1, 3, 0)
     """
-    zs, xs = array2scatter(edges)
-    ys = np.zeros(len(zs), dtype=int)
-    return xs, ys, zs
+    # No matter projecting on which plane (xz or yz), z coordinates are always the same
+    zs, _s = array2scatter(edges)
+    _0 = np.zeros(len(zs), dtype=int)
+    if plane.strip().lower() == "xz":
+        # If project on xz plane, coordinates on y axis will be 0
+        #      xs, ys, zs
+        return _s, _0, zs
+    if plane.strip().lower() == "yz":
+        # If project on yz plane, coordinates on x axis will be 0
+        #      xs, ys, zs
+        return _0, _s, zs
+    # If you arrive here, then the argument plane is not given correctly
+    raise ValueError("The arguemnt plane should be either 'xz' or 'yz'.")
 
 
 
 def img2arr(path_img:str, flip_horizontal:bool) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     edges = shitty_edge_detection(path_img)
-    xs, ys, zs = smash_on_plane_xz(edges, flip_horizontal)
+    xs, ys, zs = smash_on_plane(edges, flip_horizontal)
     return xs, ys, zs
 
 
