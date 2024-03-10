@@ -11,20 +11,7 @@ import pdb
 
 
 
-def main():
-    # Create array from image
-    path_img = "../data/txt_a.jpg"
-    xs_img1, ys_img1, zs_img1 = img2arr(path_img, False, "xz")
-    path_img = "../data/txt_q.jpg"
-    xs_img2, ys_img2, zs_img2 = img2arr(path_img, True, "yz")
-
-    # Create df from array
-    df1 = pd.DataFrame({"xs":xs_img1, "ys":ys_img1, "zs":zs_img1})
-    df2 = pd.DataFrame({"xs":xs_img2, "ys":ys_img2, "zs":zs_img2})
-    # Drop 0 axis
-    df1 = df1[["xs", "zs"]]
-    df2 = df2[["ys", "zs"]]
-    # Style: Chaos
+def chaos_maximal(df1:pd.DataFrame, df2:pd.DataFrame) -> pd.DataFrame:
     df_f_chaos = pd.DataFrame({"xs":[], "ys":[], "zs":[]}, dtype=int)
     for z in set(df1["zs"].to_list() + df2["zs"].to_list()): # all z value
         df1_truncated = df1.loc[df1["zs"]==z].copy(deep=True)
@@ -57,6 +44,25 @@ def main():
         arr_new_col = np.concatenate((df_small[col_to_fill].to_numpy(), np.random.randint(minValue, maxValue, size=size)))
         df_big.loc[:,col_to_fill] = arr_new_col
         df_f_chaos = pd.concat([df_f_chaos, df_big])
+    return df_f_chaos
+
+
+
+def main():
+    # Create array from image
+    path_img = "../data/txt_a.jpg"
+    xs_img1, ys_img1, zs_img1 = img2arr(path_img, False, "xz")
+    path_img = "../data/txt_q.jpg"
+    xs_img2, ys_img2, zs_img2 = img2arr(path_img, True, "yz")
+
+    # Create df from array
+    df1 = pd.DataFrame({"xs":xs_img1, "ys":ys_img1, "zs":zs_img1})
+    df2 = pd.DataFrame({"xs":xs_img2, "ys":ys_img2, "zs":zs_img2})
+    # Drop 0 axis
+    df1 = df1[["xs", "zs"]]
+    df2 = df2[["ys", "zs"]]
+    # Style: Chaos
+    df_f_chaos = chaos_maximal(df1, df2)
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
     ax.scatter(df_f_chaos["xs"], df_f_chaos["ys"], df_f_chaos["zs"], marker=".")
