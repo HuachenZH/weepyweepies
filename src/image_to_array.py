@@ -6,7 +6,7 @@ import cv2
 
 import pdb
 
-def shitty_edge_detection(path_img:str) -> np.ndarray:
+def shitty_edge_detection(path_img:str, flip_horizontal:bool) -> np.ndarray:
     """Apply edge detection on a given image.
     First use Gauss blur to reduce noice, then use Canny to extract edges.
  
@@ -22,6 +22,9 @@ def shitty_edge_detection(path_img:str) -> np.ndarray:
     img = cv2.imread(path_img, flags=0)  
     # Flip image vertically
     img = cv2.flip(img, 0)
+    # Flip image horizontally if specified
+    if flip_horizontal:
+        img = cv2.flip(img, 1)
     # Blur the image for better edge detection
     img_blur = cv2.GaussianBlur(img,(3,3), sigmaX=0, sigmaY=0) 
     # Canny Edge Detection
@@ -51,7 +54,7 @@ def array2scatter(edges:np.ndarray) -> tuple[np.ndarray, np.ndarray]:
 
 
 
-def smash_on_plane(edges:np.ndarray, flip_horizontal:bool, plane:str) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+def smash_on_plane(edges:np.ndarray, plane:str) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Project an image onto the xz plane.
 
             Parameters:
@@ -72,7 +75,8 @@ def smash_on_plane(edges:np.ndarray, flip_horizontal:bool, plane:str) -> tuple[n
                     zs: (0, 1, 6, 5, 1)
                          ^  Coordinate of the point: (1, 3, 0)
     """
-    # No matter projecting on which plane (xz or yz), z coordinates are always the same
+    # No matter projecting on which plane (xz or yz), z coordinates are always the same,
+    # and there will always be an array of 0.
     zs, _s = array2scatter(edges)
     _0 = np.zeros(len(zs), dtype=int)
     if plane.strip().lower() == "xz":
@@ -109,8 +113,8 @@ def img2arr(path_img:str, flip_horizontal:bool, plane:str) -> tuple[np.ndarray, 
                     zs: (3, 1, 6, 5, 1)
                          ^  Coordinate of the point: (1, 0, 3)
     """
-    edges = shitty_edge_detection(path_img)
-    xs, ys, zs = smash_on_plane(edges, flip_horizontal, plane)
+    edges = shitty_edge_detection(path_img, flip_horizontal)
+    xs, ys, zs = smash_on_plane(edges, plane)
     return xs, ys, zs
 
 
