@@ -105,9 +105,9 @@ def img2arr(path_img:str, flip_horizontal:bool, plane:str) -> tuple[np.ndarray, 
                     zs: array of scatter points' z axis coordinate.
                     ----------------
                     xs: (1, 7, 6, 7, 9)
-                    ys: (3, 4, 9, 7, 0)
-                    zs: (0, 1, 6, 5, 1)
-                         ^  Coordinate of the point: (1, 3, 0)
+                    ys: (0, 0, 0, 0, 0)
+                    zs: (3, 1, 6, 5, 1)
+                         ^  Coordinate of the point: (1, 0, 3)
     """
     edges = shitty_edge_detection(path_img)
     xs, ys, zs = smash_on_plane(edges, flip_horizontal, plane)
@@ -116,7 +116,7 @@ def img2arr(path_img:str, flip_horizontal:bool, plane:str) -> tuple[np.ndarray, 
 
 
 if __name__ == "__main__":
-    path_img = "../data/txt_anae.jpg"
+    path_img = "../data/txt_ae.jpg"
     xs, ys, zs = img2arr(path_img, True, "xz")
     breakpoint()
 
