@@ -41,7 +41,7 @@ def array2scatter(edges:np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     """Extract coordinate of scatter points from an image's array.
  
             Parameters:
-                    edges (np.ndarray)): array of the image.
+                    edges (np.ndarray): array of the image.
                     The image is in greyscale in black background, all pixels in white,
                     their row and col index will be extracted. 
  
