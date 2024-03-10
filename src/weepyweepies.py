@@ -59,6 +59,42 @@ def chaos_maximal(df1:pd.DataFrame, df2:pd.DataFrame) -> pd.DataFrame:
     return df_f_chaos
 
 
+def chaos_minimal(df1:pd.DataFrame, df2:pd.DataFrame) -> pd.DataFrame:
+    df_f_chaos = pd.DataFrame({"xs":[], "ys":[], "zs":[]}, dtype=int)
+    for z in set(df1["zs"].to_list() + df2["zs"].to_list()): # all z value
+        df1_truncated = df1.loc[df1["zs"]==z].copy(deep=True)
+        df2_truncated = df2.loc[df2["zs"]==z].copy(deep=True)
+        # If one of the two is empty. Notice that it's impossible that both are empty.
+        if df1_truncated.empty:
+            # if nothing found in df1, then take df2, affect random values and append to df chaos
+            df2_truncated.loc[:,"xs"] = np.random.randint(df1["xs"].min(), df1["xs"].max(), size=df2_truncated.shape[0])
+            df_f_chaos = pd.concat([df_f_chaos, df2_truncated])
+            continue
+        if df2_truncated.empty:
+            df1_truncated.loc[:,"ys"] = np.random.randint(df2["ys"].min(), df2["ys"].max(), size=df1_truncated.shape[0])
+            df_f_chaos = pd.concat([df_f_chaos, df1_truncated])
+            continue
+        # If none of the two is empty.
+        if df1_truncated.shape[0] < df2_truncated.shape[0]:
+            df_small = df1_truncated
+            df_big = df2_truncated
+            col_to_fill = "xs"
+            minValue = df1["xs"].min()
+            maxValue = df1["xs"].max()
+            size = df2_truncated.shape[0] - df1_truncated.shape[0]
+        else:
+            df_small = df2_truncated
+            df_big = df1_truncated
+            col_to_fill = "ys"
+            minValue = df2["ys"].min()
+            maxValue = df2["ys"].max()
+            size = df1_truncated.shape[0] - df2_truncated.shape[0]
+        arr_new_col = np.concatenate((df_small[col_to_fill].to_numpy(), np.random.randint(minValue, maxValue, size=size)))
+        df_big.loc[:,col_to_fill] = arr_new_col
+        df_f_chaos = pd.concat([df_f_chaos, df_big])
+    return df_f_chaos
+
+
 
 def main():
     # Create array from image
@@ -68,12 +104,26 @@ def main():
     xs_img2, ys_img2, zs_img2 = img2arr(path_img, True, "yz")
 
     # Create df from array
-    df1 = pd.DataFrame({"xs":xs_img1, "ys":ys_img1, "zs":zs_img1})
-    df2 = pd.DataFrame({"xs":xs_img2, "ys":ys_img2, "zs":zs_img2})
+    # By convention, df2 has more rows than df1
+    if len(xs_img2) > len(xs_img1):
+        df1 = pd.DataFrame({"xs":xs_img1, "ys":ys_img1, "zs":zs_img1})
+        df2 = pd.DataFrame({"xs":xs_img2, "ys":ys_img2, "zs":zs_img2})
+    else:
+        df2 = pd.DataFrame({"xs":xs_img1, "ys":ys_img1, "zs":zs_img1})
+        df1 = pd.DataFrame({"xs":xs_img2, "ys":ys_img2, "zs":zs_img2})
     # Drop 0 axis
     df1 = df1[["xs", "zs"]]
     df2 = df2[["ys", "zs"]]
-    # Style: Chaos
+
+    # Style: Chaos maximal
+    df_f_chaos = chaos_minimal(df1, df2)
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='3d')
+    ax.scatter(df_f_chaos["xs"], df_f_chaos["ys"], df_f_chaos["zs"], marker=".")
+    plt.show()
+    breakpoint()
+
+    # Style: Chaos maximal
     df_f_chaos = chaos_maximal(df1, df2)
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
