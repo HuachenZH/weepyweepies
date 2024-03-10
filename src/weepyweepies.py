@@ -61,6 +61,18 @@ def chaos_maximal(df1:pd.DataFrame, df2:pd.DataFrame) -> pd.DataFrame:
 
 
 def chaos_minimal(df1:pd.DataFrame, df2:pd.DataFrame) -> pd.DataFrame:
+    """Chaos style, minimal points in the space.
+ 
+            Parameters:
+                    df1 (pd.DataFrame): dataframe of img on xz plane.
+                    Contains two columns: "xs" and "zs". As Y axis is zero, it's omitted.
+
+                    df2 (pd.DataFrame): dataframe of img on yz plane.
+                    Contains two columns: "ys" and "zs". As X axis is zero, it's omitted.
+ 
+            Returns:
+                    df_f_chaos (pd.DataFrame): dataframe of two images combined in 3D.
+    """
     df_f_chaos = pd.DataFrame({"xs":[], "ys":[], "zs":[]}, dtype=int)
     for z in set(df1["zs"].to_list() + df2["zs"].to_list()): # all z value
         df1_truncated = df1.loc[df1["zs"]==z].copy(deep=True)
@@ -93,6 +105,18 @@ def chaos_minimal(df1:pd.DataFrame, df2:pd.DataFrame) -> pd.DataFrame:
 
 
 def chaos_middle(df1:pd.DataFrame, df2:pd.DataFrame) -> pd.DataFrame:
+    """Chaos style, points in the space just in need.
+ 
+            Parameters:
+                    df1 (pd.DataFrame): dataframe of img on xz plane.
+                    Contains two columns: "xs" and "zs". As Y axis is zero, it's omitted.
+
+                    df2 (pd.DataFrame): dataframe of img on yz plane.
+                    Contains two columns: "ys" and "zs". As X axis is zero, it's omitted.
+ 
+            Returns:
+                    df_f_chaos (pd.DataFrame): dataframe of two images combined in 3D.
+    """
     df_f_chaos = pd.DataFrame({"xs":[], "ys":[], "zs":[]}, dtype=int)
     for z in set(df1["zs"].to_list() + df2["zs"].to_list()): # all z values
         df1_truncated = df1.loc[df1["zs"]==z].copy(deep=True)
@@ -129,10 +153,6 @@ def chaos_middle(df1:pd.DataFrame, df2:pd.DataFrame) -> pd.DataFrame:
             df1_truncated.loc[:, "ys"] = list_ys
             df_f_chaos = pd.concat([df_f_chaos, df1_truncated])
     return df_f_chaos
-
-
-
-
 
 
 
