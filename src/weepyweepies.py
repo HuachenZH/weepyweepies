@@ -121,8 +121,6 @@ def chaos_middle(df1:pd.DataFrame, df2:pd.DataFrame) -> pd.DataFrame:
     for z in set(df1["zs"].to_list() + df2["zs"].to_list()): # all z values
         df1_truncated = df1.loc[df1["zs"]==z].copy(deep=True)
         df2_truncated = df2.loc[df2["zs"]==z].copy(deep=True)
-        if z == 65:
-            breakpoint()
         # If one of the two is empty. Notice that it's impossible that both are empty.
         # THis should not occur if the input images are carefully pruned (same height).
         if df1_truncated.empty:
@@ -190,10 +188,11 @@ def main():
     #__fig.suptitle('Chaos middle', fontsize=16)
     #__plt.show()
     arr_f_chaos = df_f_chaos.copy(deep=True).to_numpy().astype(float)
-    pdata = pyvista.PolyData(arr_f_chaos)
+    arr_f_chaos_scaled = (arr_f_chaos - arr_f_chaos.min())/arr_f_chaos.max()
+    pdata = pyvista.PolyData(arr_f_chaos_scaled)
     pdata['orig_sphere'] = np.arange(arr_f_chaos.shape[0])
     # create many spheres from the point cloud
-    sphere = pyvista.Sphere(radius=0.01, phi_resolution=10, theta_resolution=10)
+    sphere = pyvista.Sphere(radius=0.02, phi_resolution=10, theta_resolution=10)
     pc = pdata.glyph(scale=False, geom=sphere, orient=False)
     pc.plot(cmap='Reds')
     breakpoint()
