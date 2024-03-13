@@ -158,9 +158,11 @@ def chaos_middle(df1:pd.DataFrame, df2:pd.DataFrame) -> pd.DataFrame:
 
 def main():
     # Create array from image
-    path_img = "../data/txt_a2.jpg"
+    #path_img = "../data/txt_a2.jpg"
+    path_img = "../data/txt_anae.jpg"
     xs_img1, ys_img1, zs_img1 = img2arr(path_img, False, "xz")
-    path_img = "../data/txt_q2.jpg"
+    #path_img = "../data/txt_q2.jpg"
+    path_img = "../data/txt_quentin.jpg"
     xs_img2, ys_img2, zs_img2 = img2arr(path_img, True, "yz")
 
     # Create df from array
@@ -214,12 +216,6 @@ def main():
     #df1[df1["zs"].isin( set(df1["zs"].to_list() + df2["zs"].to_list()) )]
     breakpoint()
 
-    # Prepare for plot
-    fig = plt.figure()
-    ax = fig.add_subplot(projection='3d')
-    ax.scatter(xs_img1, ys_img1, zs_img1, marker='.')
-    ax.scatter(xs_img2, ys_img2, zs_img2, marker='^')
-    plt.show()
     #cv2.destroyAllWindows() 
 
 
