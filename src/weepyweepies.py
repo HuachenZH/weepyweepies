@@ -158,11 +158,11 @@ def chaos_middle(df1:pd.DataFrame, df2:pd.DataFrame) -> pd.DataFrame:
 
 def main():
     # Create array from image
-    path_img = "../data/txt_a2.jpg"
-    #path_img = "../data/txt_anae.jpg"
+    #path_img = "../data/txt_a2.jpg"
+    path_img = "../data/txt_anae.jpg"
     xs_img1, ys_img1, zs_img1 = img2arr(path_img, False, "xz")
-    path_img = "../data/txt_q2.jpg"
-    #path_img = "../data/txt_quentin.jpg"
+    #path_img = "../data/txt_q2.jpg"
+    path_img = "../data/txt_quentin.jpg"
     xs_img2, ys_img2, zs_img2 = img2arr(path_img, True, "yz")
 
     # Create df from array
@@ -192,7 +192,7 @@ def main():
     pdata = pyvista.PolyData(arr_f_chaos_scaled)
     pdata['orig_sphere'] = np.arange(arr_f_chaos.shape[0])
     # create many spheres from the point cloud
-    sphere = pyvista.Sphere(radius=0.02, phi_resolution=10, theta_resolution=10)
+    sphere = pyvista.Sphere(radius=0.005, phi_resolution=10, theta_resolution=10)
     pc = pdata.glyph(scale=False, geom=sphere, orient=False)
     pc.plot(cmap='Reds')
     breakpoint()

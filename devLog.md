@@ -22,5 +22,11 @@
 - merge two protraits
 
 
+## Encountered
+- pyvista does not show anything  
+  - root cause is the range of array. I scale it to 0~1 then it works
+
+
 
 to resume: 
+try to make the plot more beautiful. After that, i will restart image processing
