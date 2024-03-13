@@ -2,7 +2,7 @@ import random
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-
+import pyvista
 import cv2
 
 from image_to_array import img2arr
@@ -121,6 +121,8 @@ def chaos_middle(df1:pd.DataFrame, df2:pd.DataFrame) -> pd.DataFrame:
     for z in set(df1["zs"].to_list() + df2["zs"].to_list()): # all z values
         df1_truncated = df1.loc[df1["zs"]==z].copy(deep=True)
         df2_truncated = df2.loc[df2["zs"]==z].copy(deep=True)
+        if z == 65:
+            breakpoint()
         # If one of the two is empty. Notice that it's impossible that both are empty.
         # THis should not occur if the input images are carefully pruned (same height).
         if df1_truncated.empty:
@@ -134,7 +136,7 @@ def chaos_middle(df1:pd.DataFrame, df2:pd.DataFrame) -> pd.DataFrame:
             continue
         # If none of the two is empty.
         if len(df1_truncated.index) == len(df2_truncated.index):
-            df2_truncated.loc[:, "xs"] = df1_truncated.sample(frac=1).loc[:, "xs"]
+            df2_truncated.loc[:, "xs"] = df1_truncated.sample(frac=1).loc[:, "xs"].to_list()
             df_f_chaos = pd.concat([df_f_chaos, df2_truncated])
         # Q > A, within zs, too much ys, not enough xs
         elif len(df1_truncated.index) < len(df2_truncated.index):
@@ -158,11 +160,11 @@ def chaos_middle(df1:pd.DataFrame, df2:pd.DataFrame) -> pd.DataFrame:
 
 def main():
     # Create array from image
-    #path_img = "../data/txt_a2.jpg"
-    path_img = "../data/txt_anae.jpg"
+    path_img = "../data/txt_a2.jpg"
+    #path_img = "../data/txt_anae.jpg"
     xs_img1, ys_img1, zs_img1 = img2arr(path_img, False, "xz")
-    #path_img = "../data/txt_q2.jpg"
-    path_img = "../data/txt_quentin.jpg"
+    path_img = "../data/txt_q2.jpg"
+    #path_img = "../data/txt_quentin.jpg"
     xs_img2, ys_img2, zs_img2 = img2arr(path_img, True, "yz")
 
     # Create df from array
@@ -179,14 +181,21 @@ def main():
 
     # Style: Chaos middle
     df_f_chaos = chaos_middle(df1, df2)
-    fig = plt.figure()
-    ax = fig.add_subplot(projection='3d')
-    ax.scatter(df_f_chaos["xs"], df_f_chaos["ys"], df_f_chaos["zs"], marker=".")
-    ax.set_xlabel('X Label')
-    ax.set_ylabel('Y Label')
-    ax.set_zlabel('Z Label')
-    fig.suptitle('Chaos middle', fontsize=16)
-    plt.show()
+    #__fig = plt.figure()
+    #__ax = fig.add_subplot(projection='3d')
+    #__ax.scatter(df_f_chaos["xs"], df_f_chaos["ys"], df_f_chaos["zs"], marker=".")
+    #__ax.set_xlabel('X Label')
+    #__ax.set_ylabel('Y Label')
+    #__ax.set_zlabel('Z Label')
+    #__fig.suptitle('Chaos middle', fontsize=16)
+    #__plt.show()
+    arr_f_chaos = df_f_chaos.copy(deep=True).to_numpy().astype(float)
+    pdata = pyvista.PolyData(arr_f_chaos)
+    pdata['orig_sphere'] = np.arange(arr_f_chaos.shape[0])
+    # create many spheres from the point cloud
+    sphere = pyvista.Sphere(radius=0.01, phi_resolution=10, theta_resolution=10)
+    pc = pdata.glyph(scale=False, geom=sphere, orient=False)
+    pc.plot(cmap='Reds')
     breakpoint()
 
     # Style: Chaos minimal
