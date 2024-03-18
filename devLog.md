@@ -33,6 +33,8 @@
 - use tqdm
 - optimize memory usage
 - output gif
+- point size scale: bigger the closer
+- image pre processing, higher contrast
 
 
 

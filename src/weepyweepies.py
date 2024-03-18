@@ -233,10 +233,10 @@ def edge():
 
 def doppelize():
     # Create array from image
-    path_img1 = "../data/anae_small.jfif"
-    #path_img1 = "../data/anae_mid.jfif"
-    path_img2 = "../data/quentin_small.jpg"
-    #path_img2 = "../data/quentin_mid.jpg"
+    #path_img1 = "../data/anae_small.jfif"
+    path_img1 = "../data/anae_mid.jfif"
+    #path_img2 = "../data/quentin_small.jpg"
+    path_img2 = "../data/quentin_mid.jpg"
 
     arr_img1 = cv2.imread(path_img1, flags=0)  
     arr_img1 = cv2.flip(arr_img1, 0)
@@ -257,11 +257,12 @@ def doppelize():
     arr_f_chaos = df_f_chaos.copy(deep=True).to_numpy().astype(float)
     arr_f_chaos = (arr_f_chaos - arr_f_chaos.min())/arr_f_chaos.max()
     pdata = pyvista.PolyData(arr_f_chaos)
-    pdata['orig_sphere'] = np.arange(arr_f_chaos.shape[0])
+    #pdata['orig_sphere'] = np.arange(arr_f_chaos.shape[0])
     # create many spheres from the point cloud
-    sphere = pyvista.Sphere(radius=0.001, phi_resolution=10, theta_resolution=10)
+    sphere = pyvista.Sphere(radius=0.0008, phi_resolution=10, theta_resolution=10)
     pc = pdata.glyph(scale=False, geom=sphere, orient=False)
-    pc.plot(cmap='Reds')
+    #pc.plot(cmap='Reds')
+    pc.plot()
 
 
 
