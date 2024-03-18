@@ -3,6 +3,8 @@ import numpy as np
 import copy
 import cv2
 import matplotlib.pyplot as plt
+import pyvista
+from image_to_array import smash_on_plane
 import pdb
 
 
@@ -70,8 +72,22 @@ def doppel(arr_img:np.ndarray) -> np.ndarray:
 def main():
     path_input_img = "../data/anae_small.jfif"
     arr_img = cv2.imread(path_input_img, flags=0)  
+    arr_img = cv2.flip(arr_img, 0)
     arr_img = scale_down(arr_img)
     arr_res = doppel(arr_img)
+
+    zs, xs = np.where(arr_res==1)
+    arr_coordinates = np.array([xs, np.zeros(len(xs)), zs])
+    arr_coordinates = (arr_coordinates - arr_coordinates.min())/arr_coordinates.max()
+    arr_coordinates = np.transpose(arr_coordinates)
+
+    pdata = pyvista.PolyData(arr_coordinates)
+    pdata['orig_sphere'] = np.arange(arr_coordinates.shape[0])
+    # create many spheres from the point cloud
+    sphere = pyvista.Sphere(radius=0.001, phi_resolution=10, theta_resolution=10)
+    pc = pdata.glyph(scale=False, geom=sphere, orient=False)
+    pc.plot(cmap='Reds')
+    breakpoint()
 
 
 

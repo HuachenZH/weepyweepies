@@ -27,6 +27,14 @@
   - root cause is the range of array. I scale it to 0~1 then it works
 
 
+## To improve / future work
+- the dictionary of doppel, more levels, more accurate presentation
+- code structure
+- use tqdm
+- optimize memory usage
+- output gif
+
+
 
 to resume: 
 try to make the plot more beautiful. After that, i will restart image processing

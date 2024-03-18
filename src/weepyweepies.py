@@ -6,6 +6,8 @@ import pyvista
 import cv2
 
 from image_to_array import img2arr
+from tamaki_iroha import scale_down
+from tamaki_iroha import doppel
 
 import pdb
 
@@ -116,6 +118,7 @@ def chaos_middle(df1:pd.DataFrame, df2:pd.DataFrame) -> pd.DataFrame:
  
             Returns:
                     df_f_chaos (pd.DataFrame): dataframe of two images combined in 3D.
+                    Three columns: xs, ys, zs. Each row is the coordinate of a point in the space.
     """
     df_f_chaos = pd.DataFrame({"xs":[], "ys":[], "zs":[]}, dtype=int)
     for z in set(df1["zs"].to_list() + df2["zs"].to_list()): # all z values
@@ -156,7 +159,7 @@ def chaos_middle(df1:pd.DataFrame, df2:pd.DataFrame) -> pd.DataFrame:
 
 
 
-def main():
+def edge():
     # Create array from image
     #path_img = "../data/txt_a2.jpg"
     path_img = "../data/txt_anae.jpg"
@@ -228,6 +231,41 @@ def main():
 
 
 
-if __name__ == "__main__":
-    main()
+def doppelize():
+    # Create array from image
+    path_img1 = "../data/anae_small.jfif"
+    #path_img1 = "../data/anae_mid.jfif"
+    path_img2 = "../data/quentin_small.jpg"
+    #path_img2 = "../data/quentin_mid.jpg"
 
+    arr_img1 = cv2.imread(path_img1, flags=0)  
+    arr_img1 = cv2.flip(arr_img1, 0)
+    arr_img1 = scale_down(arr_img1)
+    arr_res1 = doppel(arr_img1)
+
+    arr_img2 = cv2.imread(path_img2, flags=0)  
+    arr_img2 = cv2.flip(arr_img2, 0)
+    arr_img2 = scale_down(arr_img2)
+    arr_res2 = doppel(arr_img2)
+
+    zs, xs = np.where(arr_res1==1)
+    df1 = pd.DataFrame({"xs":xs, "zs":zs})
+    zs, ys = np.where(arr_res2==1)
+    df2 = pd.DataFrame({"ys":ys, "zs":zs})
+
+    df_f_chaos = chaos_middle(df1, df2)
+    arr_f_chaos = df_f_chaos.copy(deep=True).to_numpy().astype(float)
+    arr_f_chaos = (arr_f_chaos - arr_f_chaos.min())/arr_f_chaos.max()
+    pdata = pyvista.PolyData(arr_f_chaos)
+    pdata['orig_sphere'] = np.arange(arr_f_chaos.shape[0])
+    # create many spheres from the point cloud
+    sphere = pyvista.Sphere(radius=0.001, phi_resolution=10, theta_resolution=10)
+    pc = pdata.glyph(scale=False, geom=sphere, orient=False)
+    pc.plot(cmap='Reds')
+
+
+
+
+if __name__ == "__main__":
+    #edge()
+    doppelize()
