@@ -25,7 +25,15 @@ def scale_down(arr_img:np.ndarray) -> np.ndarray:
 
 
 def doppel(arr_img:np.ndarray) -> np.ndarray:
-    """沈黙のドッペル !! Transform magical girl into doppel"""
+    """沈黙のドッペル !! Transform magical girl into doppel.
+    The resulting array's size will be three times bigger than the original array.
+ 
+            Parameters:
+                    arr_img (np.ndarray): array of image.
+ 
+            Returns:
+                    arr_res (np.ndarray): array in "doppel" mode.
+    """
     # The key of dict_doppel: 1 is the darkest, 6 is the lightest.
     # In the 3*3 array, 1 corresponds to a dark pixel, 0 corresponds to a light pixel.
     dict_doppel = {}
@@ -55,7 +63,7 @@ def doppel(arr_img:np.ndarray) -> np.ndarray:
     #    str_res += "\n"
     #with open("out.txt", "w") as txt:
     #    txt.write(str_res)
-    breakpoint()
+    return arr_res
 
 
 
@@ -63,7 +71,7 @@ def main():
     path_input_img = "../data/anae_small.jfif"
     arr_img = cv2.imread(path_input_img, flags=0)  
     arr_img = scale_down(arr_img)
-    doppel(arr_img)
+    arr_res = doppel(arr_img)
 
 
 
