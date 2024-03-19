@@ -26,6 +26,12 @@
 - pyvista does not show anything  
   - root cause is the range of array. I scale it to 0~1 then it works
 
+- with plotter, the point cloud is truncated
+  - root cause: plotter.add_mesh(dataset, render_points_as_spheres=True)  
+  Chatgpt tells me that when render_points_as_spheres=True, the point cloud may be truncated due to the " culling techniques" or "Level Of Detail" to optimize the performance.  
+
+  With this parameter set to false, points will be represented as dot instead of sphere. Still, you can configure the dot size with "point_size="
+
 
 ## To improve / future work
 - the dictionary of doppel, more levels, more accurate presentation
@@ -40,3 +46,4 @@
 
 to resume: 
 try to make the plot more beautiful. After that, i will restart image processing
+plotter has replaced glyph, rotate_z works, now you need to make gif
