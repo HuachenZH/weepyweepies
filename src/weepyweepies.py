@@ -257,12 +257,18 @@ def doppelize():
     arr_f_chaos = df_f_chaos.copy(deep=True).to_numpy().astype(float)
     arr_f_chaos = (arr_f_chaos - arr_f_chaos.min())/arr_f_chaos.max()
     pdata = pyvista.PolyData(arr_f_chaos)
-    #pdata['orig_sphere'] = np.arange(arr_f_chaos.shape[0])
-    # create many spheres from the point cloud
-    sphere = pyvista.Sphere(radius=0.0008, phi_resolution=10, theta_resolution=10)
-    pc = pdata.glyph(scale=False, geom=sphere, orient=False)
-    #pc.plot(cmap='Reds')
-    pc.plot()
+
+    #__#pdata['orig_sphere'] = np.arange(arr_f_chaos.shape[0])
+    #__# create many spheres from the point cloud
+    #__sphere = pyvista.Sphere(radius=0.0008, phi_resolution=10, theta_resolution=10)
+    #__pc = pdata.glyph(scale=False, geom=sphere, orient=False)
+    #__#pc.plot(cmap='Reds')
+    #__pc.plot()
+
+    # Display the arrows
+    plotter = pyvista.Plotter()
+    plotter.add_mesh(pdata, style="points", color='maroon', point_size=0.005, render_points_as_spheres=False, lighting=False)
+    plotter.show()
 
 
 

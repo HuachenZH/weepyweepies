@@ -1,14 +1,12 @@
 import numpy as np
-import pyvista
-import pdb
+import pyvista as pv
 
-point_cloud = np.random.random((100, 3))
-pdata = pyvista.PolyData(point_cloud)
-# pdata['orig_sphere'] = np.arange(100)
 
-# create many spheres from the point cloud
-sphere = pyvista.Sphere(radius=0.02, phi_resolution=10, theta_resolution=10)
-pc = pdata.glyph(scale=False, geom=sphere, orient=False)
-pc.plot(cmap='Reds')
+mesh = pv.Cube()
+rot = mesh.rotate_z(30, inplace=False)
 
-breakpoint()
+pl = pv.Plotter()
+_ = pl.add_mesh(rot)
+_ = pl.add_mesh(mesh, style='wireframe', line_width=3)
+_ = pl.add_axes_at_origin()
+pl.show()
