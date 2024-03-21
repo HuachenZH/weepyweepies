@@ -35,13 +35,13 @@
 
 ## To improve / future work
 - set width and height of input image by python
+- image pre processing, higher contrast
 - the dictionary of doppel, more levels, more accurate presentation
 - code structure
-- use tqdm
 - optimize memory usage
-- output gif
-- point size scale: bigger the closer
-- image pre processing, higher contrast
+- ~~use tqdm when rendering gif~~
+- ~~output gif~~
+- ~~point size scale: bigger the closer. Feature deprected (this feature needs to show points as sphere. I chose to show points as dots for performance issue)~~
 
 
 
