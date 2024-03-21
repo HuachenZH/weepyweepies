@@ -4,6 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import pyvista
 import cv2
+from tqdm import tqdm
 
 from image_to_array import img2arr
 from tamaki_iroha import scale_down
@@ -265,10 +266,18 @@ def doppelize():
     #__#pc.plot(cmap='Reds')
     #__pc.plot()
 
-    # Display the arrows
     plotter = pyvista.Plotter()
     plotter.add_mesh(pdata, style="points", color='maroon', point_size=0.005, render_points_as_spheres=False, lighting=False)
-    plotter.show()
+    plotter.view_xz()
+    #plotter.show_axes()
+    #plotter.show()
+
+    plotter.open_gif("../data/point_cloud.gif")
+    plotter.write_frame()
+    for angle_deg in tqdm(np.linspace(0, 180, 100)[:-1]):
+        pdata.rotate_z(angle_deg, point=(max(arr_f_chaos[:, 0])/2, max(arr_f_chaos[:, 1])/2, max(arr_f_chaos[:, 2])/2), inplace=True)
+        plotter.write_frame()
+    plotter.close()
 
 
 
