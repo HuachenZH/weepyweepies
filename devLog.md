@@ -34,6 +34,7 @@
 
 
 ## To improve / future work
+- set width and height of input image by python
 - the dictionary of doppel, more levels, more accurate presentation
 - code structure
 - use tqdm

@@ -272,9 +272,10 @@ def doppelize():
     #plotter.show_axes()
     #plotter.show()
 
-    plotter.open_gif("../data/point_cloud.gif")
+    plotter.open_gif("../data/point_cloud.gif", fps=40, subrectangles=True)
     plotter.write_frame()
-    for angle_deg in tqdm(np.linspace(0, 180, 100)[:-1]):
+    angle_deg = 1
+    for _ in tqdm(np.linspace(0, 360, int(360/angle_deg))[:-1]):
         pdata.rotate_z(angle_deg, point=(max(arr_f_chaos[:, 0])/2, max(arr_f_chaos[:, 1])/2, max(arr_f_chaos[:, 2])/2), inplace=True)
         plotter.write_frame()
     plotter.close()
