@@ -112,6 +112,7 @@ def projection_on_plane(arr_img:np.ndarray, plane:str) -> pd.DataFrame:
         raise ValueError("You can only put xz, yz or xy as plane.")
 
 
+
 def rise_chaos(arr_doppel1:np.ndarray, arr_doppel2:np.ndarray) -> np.ndarray:
     """Mix the images in 3D space.
  
