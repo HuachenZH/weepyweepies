@@ -22,7 +22,8 @@ def scale_down(arr_img:np.ndarray, doppel_size:int) -> np.ndarray:
                     If there are 6 levels in total, 
                     then the output array is composed by int between 1 and 6 (included).
     """
-    notch = 255 / len(create_doppel_dict(doppel_size).keys())
+    # the +1 is a temporary workaround when there is 255 in arr_img
+    notch = (255+1) / len(create_doppel_dict(doppel_size).keys())
     return arr_img // notch + 1
 
 
@@ -39,12 +40,19 @@ def create_doppel_dict(doppel_size:int) -> dict:
     """
     if doppel_size == 3:
         dict_doppel = {}
+        #--dict_doppel[1] = np.ones((3,3))
+        #--dict_doppel[2] = np.array(([1,0,1], [0,1,0], [1,0,1]))
+        #--dict_doppel[3] = np.array(([0,1,0], [1,0,1], [0,1,0]))
+        #--dict_doppel[4] = np.array(([0,0,0], [1,1,1], [0,0,0]))
+        #--dict_doppel[5] = np.array(([0,0,0], [0,1,0], [0,0,0]))
+        #--dict_doppel[6] = np.zeros((3,3))
         dict_doppel[1] = np.ones((3,3))
-        dict_doppel[2] = np.array(([1,0,1], [0,1,0], [1,0,1]))
+        dict_doppel[2] = np.array(([1,1,1], [1,0,1], [1,1,1]))
         dict_doppel[3] = np.array(([0,1,0], [1,0,1], [0,1,0]))
-        dict_doppel[4] = np.array(([0,0,0], [1,1,1], [0,0,0]))
+        dict_doppel[4] = np.array(([0,0,0], [1,0,1], [0,0,0]))
         dict_doppel[5] = np.array(([0,0,0], [0,1,0], [0,0,0]))
         dict_doppel[6] = np.zeros((3,3))
+
     else:
         raise ValueError("doppel_size incorrect. Feature not build, my bad.")
     return dict_doppel
