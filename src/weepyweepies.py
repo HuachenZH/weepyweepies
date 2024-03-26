@@ -66,22 +66,18 @@ def chaos_middle(df1:pd.DataFrame, df2:pd.DataFrame) -> pd.DataFrame:
 
 
 
-def doppelize():
-    # Create array from image
-    #path_img1 = "../data/anae_small.jfif"
-    path_img1 = "../data/anae_mid.jfif"
-    #path_img2 = "../data/quentin_small.jpg"
-    path_img2 = "../data/quentin_mid.jpg"
+def doppelize(path_img:str) -> np.ndarray:
+    arr_img = cv2.imread(path_img, flags=0)  
+    arr_img = cv2.flip(arr_img, 0)
+    arr_img = scale_down(arr_img)
+    return doppel(arr_img)
 
-    arr_img1 = cv2.imread(path_img1, flags=0)  
-    arr_img1 = cv2.flip(arr_img1, 0)
-    arr_img1 = scale_down(arr_img1)
-    arr_res1 = doppel(arr_img1)
 
-    arr_img2 = cv2.imread(path_img2, flags=0)  
-    arr_img2 = cv2.flip(arr_img2, 0)
-    arr_img2 = scale_down(arr_img2)
-    arr_res2 = doppel(arr_img2)
+def main():
+    # convert magical girls to doppels
+    arr_res1 = doppelize("../data/anae_mid.jfif")
+    arr_res2 = doppelize("../data/quentin_mid.jpg")
+
 
     zs, xs = np.where(arr_res1==1)
     df1 = pd.DataFrame({"xs":xs, "zs":zs})
@@ -104,17 +100,17 @@ def doppelize():
     plotter.add_mesh(pdata, style="points", color='maroon', point_size=0.005, render_points_as_spheres=False, lighting=False)
     plotter.view_xz()
     #plotter.show_axes()
-    #plotter.show()
+    plotter.show()
 
-    plotter.open_gif("../data/point_cloud.gif", fps=40, subrectangles=True)
-    plotter.write_frame()
-    angle_deg = 1
-    for _ in tqdm(np.linspace(0, 360, int(360/angle_deg))[:-1]):
-        pdata.rotate_z(angle_deg, point=(max(arr_f_chaos[:, 0])/2, max(arr_f_chaos[:, 1])/2, max(arr_f_chaos[:, 2])/2), inplace=True)
-        plotter.write_frame()
-    plotter.close()
+    #--plotter.open_gif("../data/point_cloud.gif", fps=40, subrectangles=True)
+    #--plotter.write_frame()
+    #--angle_deg = 1
+    #--for _ in tqdm(np.linspace(0, 360, int(360/angle_deg))[:-1]):
+    #--    pdata.rotate_z(angle_deg, point=(max(arr_f_chaos[:, 0])/2, max(arr_f_chaos[:, 1])/2, max(arr_f_chaos[:, 2])/2), inplace=True)
+    #--    plotter.write_frame()
+    #--plotter.close()
 
 
 
 if __name__ == "__main__":
-    doppelize()
+    main()
