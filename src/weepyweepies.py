@@ -85,6 +85,19 @@ def doppelize(path_img:str) -> np.ndarray:
 
 
 def projection_on_plane(arr_img:np.ndarray, plane:str) -> pd.DataFrame:
+    """Project the array of "doppelized" image onto a plane of a 3D space.
+ 
+            Parameters:
+                    arr_img (np.ndarray): array of "doppelized" image.
+
+                    plane (str): project the array on which plane, xz or yz.
+ 
+            Returns:
+                    df_res (pd.DataFrame): dataframe of two colume:
+                    - xs and zs if plane xz is chosen. ys is always 0 thus omitted.
+                    - ys and zs if plane yz is chosen. xs is always 0 thus omitted.
+                    Each row is the coordinates of a point.
+    """
     if plane.lower() == "xz":
         zs, xs = np.where(arr_img==1)
         df_res = pd.DataFrame({"xs":xs, "zs":zs})
@@ -100,6 +113,17 @@ def projection_on_plane(arr_img:np.ndarray, plane:str) -> pd.DataFrame:
 
 
 def rise_chaos(arr_doppel1:np.ndarray, arr_doppel2:np.ndarray) -> np.ndarray:
+    """Mix the images in 3D space.
+ 
+            Parameters:
+                    arr_doppel1 (np.ndarray): array of "doppelized" image 1.
+
+                    arr_doppel2 (np.ndarray): array of "doppelized" image 2.
+ 
+            Returns:
+                    arr_f_chaos (np.ndarray): array of point cloud. The images are mixed,
+                    all of them can be seened.
+    """
     # Smash img1 on plane xz, img2 on plane yz.
     df1 = projection_on_plane(arr_doppel1, "xz")
     df2 = projection_on_plane(arr_doppel2, "yz")
@@ -127,8 +151,6 @@ def main():
     del arr_res1
     del arr_res2
     gc.collect() # This helps avoid fragmenting memory.
-    breakpoint()
-
 
     # Visualization stuffs, output to gif
     plotter = pyvista.Plotter()
