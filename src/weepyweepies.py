@@ -10,6 +10,7 @@ from tamaki_iroha import scale_down
 from tamaki_iroha import doppel
 
 import pdb
+import gc
 
 
 
@@ -67,48 +68,82 @@ def chaos_middle(df1:pd.DataFrame, df2:pd.DataFrame) -> pd.DataFrame:
 
 
 def doppelize(path_img:str) -> np.ndarray:
+    """Convert magical girls to doppels. Bundle of preprocessing + doppel().
+ 
+            Parameters:
+                    path_img (str): path of input image.
+ 
+            Returns:
+                    (np.ndarray): matrix of 0 and 1. 1 represents a dark pixel.
+    """
     arr_img = cv2.imread(path_img, flags=0)  
     arr_img = cv2.flip(arr_img, 0)
     arr_img = scale_down(arr_img)
-    return doppel(arr_img)
+    arr_img = doppel(arr_img)
+    return arr_img
+
+
+
+def projection_on_plane(arr_img:np.ndarray, plane:str) -> pd.DataFrame:
+    if plane.lower() == "xz":
+        zs, xs = np.where(arr_img==1)
+        df_res = pd.DataFrame({"xs":xs, "zs":zs})
+        return df_res
+    elif plane.lower() == "yz":
+        zs, ys = np.where(arr_img==1)
+        df_res = pd.DataFrame({"ys":ys, "zs":zs})
+        return df_res
+    elif plane.lower() == "xy":
+        raise ValueError("Feature not yet build")
+    else:
+        raise ValueError("You can only put xz, yz or xy as plane.")
+
+
+def rise_chaos(arr_doppel1:np.ndarray, arr_doppel2:np.ndarray) -> np.ndarray:
+    # Smash img1 on plane xz, img2 on plane yz.
+    df1 = projection_on_plane(arr_doppel1, "xz")
+    df2 = projection_on_plane(arr_doppel2, "yz")
+    # chaos
+    df_f_chaos = chaos_middle(df1, df2)
+    #arr_f_chaos = df_f_chaos.copy(deep=True).to_numpy().astype(float)
+    arr_f_chaos = df_f_chaos.to_numpy().astype(float)
+    arr_f_chaos = (arr_f_chaos - arr_f_chaos.min())/arr_f_chaos.max()
+    return arr_f_chaos
+
 
 
 def main():
-    # convert magical girls to doppels
+    # Convert magical girls to doppels.
     arr_res1 = doppelize("../data/anae_mid.jfif")
     arr_res2 = doppelize("../data/quentin_mid.jpg")
 
-
-    zs, xs = np.where(arr_res1==1)
-    df1 = pd.DataFrame({"xs":xs, "zs":zs})
-    zs, ys = np.where(arr_res2==1)
-    df2 = pd.DataFrame({"ys":ys, "zs":zs})
-
-    df_f_chaos = chaos_middle(df1, df2)
-    arr_f_chaos = df_f_chaos.copy(deep=True).to_numpy().astype(float)
-    arr_f_chaos = (arr_f_chaos - arr_f_chaos.min())/arr_f_chaos.max()
+    # Mesh the two image, end of data processing, start of visualization
+    arr_f_chaos = rise_chaos(arr_res1, arr_res2)
     pdata = pyvista.PolyData(arr_f_chaos)
 
-    #__#pdata['orig_sphere'] = np.arange(arr_f_chaos.shape[0])
-    #__# create many spheres from the point cloud
-    #__sphere = pyvista.Sphere(radius=0.0008, phi_resolution=10, theta_resolution=10)
-    #__pc = pdata.glyph(scale=False, geom=sphere, orient=False)
-    #__#pc.plot(cmap='Reds')
-    #__pc.plot()
+    # Free some memory
+    point_of_rotation_center = (max(arr_f_chaos[:, 0])/2, max(arr_f_chaos[:, 1])/2, max(arr_f_chaos[:, 2])/2)
+    del arr_f_chaos
+    del arr_res1
+    del arr_res2
+    gc.collect() # This helps avoid fragmenting memory.
+    breakpoint()
 
+
+    # Visualization stuffs, output to gif
     plotter = pyvista.Plotter()
     plotter.add_mesh(pdata, style="points", color='maroon', point_size=0.005, render_points_as_spheres=False, lighting=False)
-    plotter.view_xz()
+    plotter.view_xz() # set the first view when visualization starts.
     #plotter.show_axes()
-    plotter.show()
+    #plotter.show()
 
-    #--plotter.open_gif("../data/point_cloud.gif", fps=40, subrectangles=True)
-    #--plotter.write_frame()
-    #--angle_deg = 1
-    #--for _ in tqdm(np.linspace(0, 360, int(360/angle_deg))[:-1]):
-    #--    pdata.rotate_z(angle_deg, point=(max(arr_f_chaos[:, 0])/2, max(arr_f_chaos[:, 1])/2, max(arr_f_chaos[:, 2])/2), inplace=True)
-    #--    plotter.write_frame()
-    #--plotter.close()
+    plotter.open_gif("../data/point_cloud.gif", fps=40, subrectangles=True)
+    plotter.write_frame() # write the first frame before rotating
+    angle_deg = 2 # angle of rotation in degree during each iteration
+    for _ in tqdm(np.linspace(0, 360, int(360/angle_deg))[:-1]):
+        pdata.rotate_z(angle_deg, point=point_of_rotation_center, inplace=True)
+        plotter.write_frame()
+    plotter.close()
 
 
 

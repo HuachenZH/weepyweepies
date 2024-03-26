@@ -163,3 +163,14 @@ def edge():
     breakpoint()
 
     #cv2.destroyAllWindows() 
+
+
+
+# Originally in main() of weepyweepies. Plot the 3D point cloud, each point is a sphere
+
+#pdata['orig_sphere'] = np.arange(arr_f_chaos.shape[0])
+# create many spheres from the point cloud
+sphere = pyvista.Sphere(radius=0.0008, phi_resolution=10, theta_resolution=10)
+pc = pdata.glyph(scale=False, geom=sphere, orient=False)
+#pc.plot(cmap='Reds')
+pc.plot()
