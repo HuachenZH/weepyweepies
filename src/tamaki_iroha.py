@@ -4,7 +4,6 @@ import copy
 import cv2
 import matplotlib.pyplot as plt
 import pyvista
-from image_to_array import smash_on_plane
 import pdb
 
 
@@ -87,7 +86,6 @@ def main():
     sphere = pyvista.Sphere(radius=0.001, phi_resolution=10, theta_resolution=10)
     pc = pdata.glyph(scale=False, geom=sphere, orient=False)
     pc.plot(cmap='Reds')
-    breakpoint()
 
 
 
