@@ -67,19 +67,24 @@ def chaos_middle(df1:pd.DataFrame, df2:pd.DataFrame) -> pd.DataFrame:
 
 
 
-def doppelize(path_img:str, doppel_size:int) -> np.ndarray:
+def doppelize(path_img:str, doppel_size:int, alpha:float=1.0, beta:float=0.0) -> np.ndarray:
     """Convert magical girls to doppels. Bundle of preprocessing + doppel().
  
             Parameters:
                     path_img (str): path of input image.
-
+ 
                     doppel_size (int): one pixel will become x pixels after doppelization.
+ 
+                    alpha (float): contrast control.
+ 
+                    beta (float): brightness control.
  
             Returns:
                     (np.ndarray): matrix of 0 and 1. 1 represents a dark pixel.
     """
     arr_img = cv2.imread(path_img, flags=0)  
     arr_img = cv2.flip(arr_img, 0)
+    arr_img = cv2.convertScaleAbs(arr_img, alpha=alpha, beta=beta)
     arr_img = scale_down(arr_img, doppel_size)
     arr_img = doppel(arr_img)
     return arr_img
@@ -142,7 +147,7 @@ def rise_chaos(arr_doppel1:np.ndarray, arr_doppel2:np.ndarray) -> np.ndarray:
 def main():
     # Convert magical girls to doppels.
     doppel_size = 3
-    arr_res1 = doppelize("../data/anae_mid.jfif", doppel_size)
+    arr_res1 = doppelize("../data/anae_mid.jfif", doppel_size, 1.5, 0)
     arr_res2 = doppelize("../data/quentin_mid.jpg", doppel_size)
 
     # Mesh the two image, end of data processing, start of visualization
@@ -161,15 +166,15 @@ def main():
     plotter.add_mesh(pdata, style="points", color='maroon', point_size=0.005, render_points_as_spheres=False, lighting=False)
     plotter.view_xz() # set the first view when visualization starts.
     #plotter.show_axes()
-    #plotter.show()
+    plotter.show()
 
-    plotter.open_gif("../data/point_cloud.gif", fps=40, subrectangles=True)
-    plotter.write_frame() # write the first frame before rotating
-    angle_deg = 2 # angle of rotation in degree during each iteration
-    for _ in tqdm(np.linspace(0, 360, int(360/angle_deg))[:-1]):
-        pdata.rotate_z(angle_deg, point=point_of_rotation_center, inplace=True)
-        plotter.write_frame()
-    plotter.close()
+    #--plotter.open_gif("../data/point_cloud.gif", fps=40, subrectangles=True)
+    #--plotter.write_frame() # write the first frame before rotating
+    #--angle_deg = 2 # angle of rotation in degree during each iteration
+    #--for _ in tqdm(np.linspace(0, 360, int(360/angle_deg))[:-1]):
+    #--    pdata.rotate_z(angle_deg, point=point_of_rotation_center, inplace=True)
+    #--    plotter.write_frame()
+    #--plotter.close()
 
 
 
