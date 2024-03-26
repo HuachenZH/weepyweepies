@@ -67,18 +67,20 @@ def chaos_middle(df1:pd.DataFrame, df2:pd.DataFrame) -> pd.DataFrame:
 
 
 
-def doppelize(path_img:str) -> np.ndarray:
+def doppelize(path_img:str, doppel_size:int) -> np.ndarray:
     """Convert magical girls to doppels. Bundle of preprocessing + doppel().
  
             Parameters:
                     path_img (str): path of input image.
+
+                    doppel_size (int): one pixel will become x pixels after doppelization.
  
             Returns:
                     (np.ndarray): matrix of 0 and 1. 1 represents a dark pixel.
     """
     arr_img = cv2.imread(path_img, flags=0)  
     arr_img = cv2.flip(arr_img, 0)
-    arr_img = scale_down(arr_img)
+    arr_img = scale_down(arr_img, doppel_size)
     arr_img = doppel(arr_img)
     return arr_img
 
@@ -139,8 +141,9 @@ def rise_chaos(arr_doppel1:np.ndarray, arr_doppel2:np.ndarray) -> np.ndarray:
 
 def main():
     # Convert magical girls to doppels.
-    arr_res1 = doppelize("../data/anae_mid.jfif")
-    arr_res2 = doppelize("../data/quentin_mid.jpg")
+    doppel_size = 3
+    arr_res1 = doppelize("../data/anae_mid.jfif", doppel_size)
+    arr_res2 = doppelize("../data/quentin_mid.jpg", doppel_size)
 
     # Mesh the two image, end of data processing, start of visualization
     arr_f_chaos = rise_chaos(arr_res1, arr_res2)

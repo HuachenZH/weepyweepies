@@ -9,19 +9,45 @@ import pdb
 
 
 
-def scale_down(arr_img:np.ndarray) -> np.ndarray:
+def scale_down(arr_img:np.ndarray, doppel_size:int) -> np.ndarray:
     """Calculate the level of each pixel.
  
             Parameters:
                     arr_img (np.ndarray): array of image in greyscale.
+
+                    doppel_size (int): one pixel will become x pixels after doppelization.
  
             Returns:
                     arr_img (np.ndarray): array scaled down.
-                    By default there are 6 levels in total, 
-                    so the output array is composed by int between 1 and 6 (included).
+                    If there are 6 levels in total, 
+                    then the output array is composed by int between 1 and 6 (included).
     """
-    notch = 255 / 6
+    notch = 255 / len(create_doppel_dict(doppel_size).keys())
     return arr_img // notch + 1
+
+
+
+def create_doppel_dict(doppel_size:int) -> dict:
+    """Create doppel dictionary depending on size of your choice.
+ 
+            Parameters:
+                    doppel_size (int): one pixel will become x pixels after doppelization.
+ 
+            Returns:
+                    dict_doppel (dict): dictionary of doppel. 
+                    Keys are integer. Values are arrays of 0 and 1, 1 represents a dark pixel.
+    """
+    if doppel_size == 3:
+        dict_doppel = {}
+        dict_doppel[1] = np.ones((3,3))
+        dict_doppel[2] = np.array(([1,0,1], [0,1,0], [1,0,1]))
+        dict_doppel[3] = np.array(([0,1,0], [1,0,1], [0,1,0]))
+        dict_doppel[4] = np.array(([0,0,0], [1,1,1], [0,0,0]))
+        dict_doppel[5] = np.array(([0,0,0], [0,1,0], [0,0,0]))
+        dict_doppel[6] = np.zeros((3,3))
+    else:
+        raise ValueError("doppel_size incorrect. Feature not build, my bad.")
+    return dict_doppel
 
 
 
@@ -37,13 +63,7 @@ def doppel(arr_img:np.ndarray) -> np.ndarray:
     """
     # The key of dict_doppel: 1 is the darkest, 6 is the lightest.
     # In the 3*3 array, 1 corresponds to a dark pixel, 0 corresponds to a light pixel.
-    dict_doppel = {}
-    dict_doppel[1] = np.ones((3,3))
-    dict_doppel[2] = np.array(([1,0,1], [0,1,0], [1,0,1]))
-    dict_doppel[3] = np.array(([0,1,0], [1,0,1], [0,1,0]))
-    dict_doppel[4] = np.array(([0,0,0], [1,1,1], [0,0,0]))
-    dict_doppel[5] = np.array(([0,0,0], [0,1,0], [0,0,0]))
-    dict_doppel[6] = np.zeros((3,3))
+    dict_doppel = create_doppel_dict(3)
     # Initialize result array
     arr_res = np.zeros((arr_img.shape[0]*3, arr_img.shape[1]*3))
     # iterate through each unique value in arr_img
@@ -68,7 +88,7 @@ def doppel(arr_img:np.ndarray) -> np.ndarray:
 
 
 
-def main():
+def test():
     path_input_img = "../data/anae_small.jfif"
     arr_img = cv2.imread(path_input_img, flags=0)  
     arr_img = cv2.flip(arr_img, 0)
@@ -90,5 +110,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    test()
 
