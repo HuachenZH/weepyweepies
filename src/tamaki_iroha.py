@@ -40,40 +40,47 @@ def create_doppel_dict(doppel_size:int) -> dict:
     """
     if doppel_size == 3:
         dict_doppel = {}
-        #--dict_doppel[1] = np.ones((3,3))
-        #--dict_doppel[2] = np.array(([1,0,1], [0,1,0], [1,0,1]))
-        #--dict_doppel[3] = np.array(([0,1,0], [1,0,1], [0,1,0]))
-        #--dict_doppel[4] = np.array(([0,0,0], [1,1,1], [0,0,0]))
-        #--dict_doppel[5] = np.array(([0,0,0], [0,1,0], [0,0,0]))
-        #--dict_doppel[6] = np.zeros((3,3))
         dict_doppel[1] = np.ones((3,3))
         dict_doppel[2] = np.array(([1,1,1], [1,0,1], [1,1,1]))
         dict_doppel[3] = np.array(([0,1,0], [1,0,1], [0,1,0]))
         dict_doppel[4] = np.array(([0,0,0], [1,0,1], [0,0,0]))
         dict_doppel[5] = np.array(([0,0,0], [0,1,0], [0,0,0]))
         dict_doppel[6] = np.zeros((3,3))
+    elif doppel_size == 5:
+        dict_doppel = {}
+        dict_doppel[1] = np.ones((5,5))
+        dict_doppel[2] = np.array(([0,1,1,1,0], np.ones(5), np.ones(5), np.ones(5), [0,1,1,1,0]))
+        dict_doppel[3] = np.array(([0,0,1,0,0], [0,1,1,1,0], [1,1,1,1,1], [0,1,1,1,0], [0,0,1,0,0]))
+        dict_doppel[4] = np.array((np.zeros(5), [0,1,1,1,0], [0,1,1,1,0], [0,1,1,1,0], np.zeros(5)))
+        dict_doppel[5] = np.array((np.zeros(5), [0,0,1,0,0], [0,1,1,1,0], [0,0,1,0,0], np.zeros(5)))
+        dict_doppel[6] = np.array((np.zeros(5), np.zeros(5), [0,1,1,1,0], np.zeros(5), np.zeros(5)))
+        dict_doppel[7] = np.array((np.zeros(5), np.zeros(5), [0,1,0,1,0], np.zeros(5), np.zeros(5)))
+        dict_doppel[8] = np.array((np.zeros(5), np.zeros(5), [0,0,1,0,0], np.zeros(5), np.zeros(5)))
+        dict_doppel[9] = np.zeros((5,5))
 
     else:
-        raise ValueError("doppel_size incorrect. Feature not build, my bad.")
+        raise ValueError(f"doppel_size incorrect: {doppel_size}. Feature not build, my bad.")
     return dict_doppel
 
 
 
-def doppel(arr_img:np.ndarray) -> np.ndarray:
+def doppel(arr_img:np.ndarray, doppel_size:int) -> np.ndarray:
     """沈黙のドッペル !! Transform magical girl into doppel.
     The resulting array's size will be three times bigger than the original array.
  
             Parameters:
                     arr_img (np.ndarray): array of image.
+                     
+                    doppel_size (int): doppel size.
  
             Returns:
                     arr_res (np.ndarray): array in "doppel" mode.
     """
     # The key of dict_doppel: 1 is the darkest, 6 is the lightest.
     # In the 3*3 array, 1 corresponds to a dark pixel, 0 corresponds to a light pixel.
-    dict_doppel = create_doppel_dict(3)
+    dict_doppel = create_doppel_dict(doppel_size)
     # Initialize result array
-    arr_res = np.zeros((arr_img.shape[0]*3, arr_img.shape[1]*3))
+    arr_res = np.zeros((arr_img.shape[0]*doppel_size, arr_img.shape[1]*doppel_size))
     # iterate through each unique value in arr_img
     for i in np.unique(arr_img):
         arr_img_clone = copy.deepcopy(arr_img)

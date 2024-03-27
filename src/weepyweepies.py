@@ -86,7 +86,7 @@ def doppelize(path_img:str, doppel_size:int, alpha:float=1.0, beta:float=0.0) ->
     arr_img = cv2.flip(arr_img, 0)
     arr_img = cv2.convertScaleAbs(arr_img, alpha=alpha, beta=beta)
     arr_img = scale_down(arr_img, doppel_size)
-    arr_img = doppel(arr_img)
+    arr_img = doppel(arr_img, doppel_size)
     return arr_img
 
 
@@ -146,7 +146,7 @@ def rise_chaos(arr_doppel1:np.ndarray, arr_doppel2:np.ndarray) -> np.ndarray:
 
 def main():
     # Convert magical girls to doppels.
-    doppel_size = 3
+    doppel_size = 5
     arr_res1 = doppelize("../data/anae_mid.jfif", doppel_size, 1.5, 0)
     arr_res2 = doppelize("../data/quentin_mid.jpg", doppel_size)
 
