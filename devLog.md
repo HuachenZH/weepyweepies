@@ -35,7 +35,7 @@
 
 ## To improve / future work
 - set width and height of input image by python
-- image pre processing, higher contrast
+- ~~image pre processing, higher contrast~~
 - the dictionary of doppel, more levels, more accurate presentation
 - ~~code structure~~ legacy is created.
 - ~~optimize memory usage~~ garbage collection is called

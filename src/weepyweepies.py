@@ -163,15 +163,15 @@ def main():
 
     # Visualization stuffs, output to gif
     plotter = pyvista.Plotter()
-    plotter.add_mesh(pdata, style="points", color='maroon', point_size=0.005, render_points_as_spheres=False, lighting=False)
+    plotter.add_mesh(pdata, style="points", color='black', point_size=0.005, render_points_as_spheres=False, lighting=False)
     plotter.view_xz() # set the first view when visualization starts.
     #plotter.show_axes()
     plotter.show()
     breakpoint()
 
-    plotter.open_gif("../data/point_cloud.gif", fps=40, subrectangles=True)
+    plotter.open_gif("../data/point_cloud_1.gif", fps=30, subrectangles=True)
     plotter.write_frame() # write the first frame before rotating
-    angle_deg = 2 # angle of rotation in degree during each iteration
+    angle_deg = 1 # angle of rotation in degree during each iteration
     for _ in tqdm(np.linspace(0, 360, int(360/angle_deg))[:-1]):
         pdata.rotate_z(angle_deg, point=point_of_rotation_center, inplace=True)
         plotter.write_frame()
