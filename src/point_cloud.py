@@ -144,11 +144,10 @@ def rise_chaos(arr_doppel1:np.ndarray, arr_doppel2:np.ndarray) -> np.ndarray:
 
 
 
-def main():
+def point_cloud(path_img1:str, path_img2:str, path_out:str, doppel_size:int=3, angle_deg:float=2, fps:int=30):
     # Convert magical girls to doppels.
-    doppel_size = 5
-    arr_res1 = doppelize("../data/anae_mid.jfif", doppel_size, 1.5, 0)
-    arr_res2 = doppelize("../data/quentin_mid.jpg", doppel_size)
+    arr_res1 = doppelize(path_img1, doppel_size, 1.5, 0)
+    arr_res2 = doppelize(path_img2, doppel_size)
 
     # Mesh the two image, end of data processing, start of visualization
     arr_f_chaos = rise_chaos(arr_res1, arr_res2)
@@ -169,13 +168,22 @@ def main():
     plotter.show()
     breakpoint()
 
-    plotter.open_gif("../data/point_cloud_1.gif", fps=30, subrectangles=True)
+    plotter.open_gif(path_out, fps=fps, subrectangles=True)
     plotter.write_frame() # write the first frame before rotating
-    angle_deg = 1 # angle of rotation in degree during each iteration
     for _ in tqdm(np.linspace(0, 360, int(360/angle_deg))[:-1]):
         pdata.rotate_z(angle_deg, point=point_of_rotation_center, inplace=True)
         plotter.write_frame()
     plotter.close()
+
+
+def main():
+    doppel_size = 5
+    path_img1 = "../data/anae_mid.jfif"
+    path_img2 = "../data/quentin_mid.jpg"
+    path_out = "../data/point_cloud_1.gif"
+    angle_deg = 2
+    fps = 30
+    point_cloud(path_img1, path_img2, path_out, doppel_size, angle_deg, fps)
 
 
 
