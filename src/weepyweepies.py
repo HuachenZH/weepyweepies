@@ -15,7 +15,13 @@ def get_args():
     return args
 
 
-args = get_args()
-point_cloud(args.inputImage1, args.inputImage2, args.outputPath, args.doppelSize, args.angleDegree, args.fps)
+
+def main():
+    args = get_args()
+    point_cloud(args.inputImage1, args.inputImage2, args.outputPath, args.doppelSize, args.angleDegree, args.fps)
 
 
+# python3 weepyweepies.py -d 5 -i1 ../data/img1.jpg -i2 ../data/img2.jpg -o ../data/output.gif -a 2 -f 30
+
+if __name__ == "_main__":
+    main()
