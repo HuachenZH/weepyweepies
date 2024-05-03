@@ -165,9 +165,10 @@ def point_cloud(path_img1:str, path_img2:str, path_out:str, doppel_size:int=3, a
     plotter.add_mesh(pdata, style="points", color='black', point_size=0.005, render_points_as_spheres=False, lighting=False)
     plotter.view_xz() # set the first view when visualization starts.
     #plotter.show_axes()
-    plotter.show()
-    breakpoint()
+    #plotter.show()
+    #_breakpoint()
 
+    # 360°
     plotter.open_gif(path_out, fps=fps, subrectangles=True)
     plotter.write_frame() # write the first frame before rotating
     for _ in tqdm(np.linspace(0, 360, int(360/angle_deg))[:-1]):
@@ -175,14 +176,26 @@ def point_cloud(path_img1:str, path_img2:str, path_out:str, doppel_size:int=3, a
         plotter.write_frame()
     plotter.close()
 
+    # 90° * 2
+    #_plotter.open_gif(path_out, fps=fps, subrectangles=True)
+    #_plotter.write_frame() # write the first frame before rotating
+    #_for _ in tqdm(np.linspace(0, 90, int(90/angle_deg))[:-1]):
+    #_    pdata.rotate_z(-1*angle_deg, point=point_of_rotation_center, inplace=True)
+    #_    plotter.write_frame()
+    #_for _ in tqdm(np.linspace(0, 90, int(90/angle_deg))[:-1]):
+    #_    pdata.rotate_z(angle_deg, point=point_of_rotation_center, inplace=True)
+    #_    plotter.write_frame()
+    #_plotter.close()
+    print(f"Gif written to {path_out}")
+
 
 def main():
     doppel_size = 5
-    path_img1 = "../data/anae_mid.jfif"
-    path_img2 = "../data/quentin_mid.jpg"
-    path_out = "../data/point_cloud_1.gif"
-    angle_deg = 2
-    fps = 30
+    path_img1 = "../data/le_r_1.jpg"
+    path_img2 = "../data/le_r_2.jpg"
+    path_out = "../data/point_cloud_r.gif"
+    angle_deg = 1
+    fps = 25
     point_cloud(path_img1, path_img2, path_out, doppel_size, angle_deg, fps)
 
 
