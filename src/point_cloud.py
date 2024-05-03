@@ -145,6 +145,26 @@ def rise_chaos(arr_doppel1:np.ndarray, arr_doppel2:np.ndarray) -> np.ndarray:
 
 
 def point_cloud(path_img1:str, path_img2:str, path_out:str, doppel_size:int, angle_deg:float, fps:int, rotation_style:str):
+    """Mash up two images into a point cloud, output a gif.
+ 
+            Parameters:
+                    path_img1 (str): path to input image 1.
+
+                    path_img2 (str): path to input image 2.
+
+                    path_out (str): path to the output gif.
+
+                    doppel_size (int): after transform, a pixel corresponds to how many points.
+
+                    angle_deg (float): rotate how many degrees between each frame.
+
+                    fps (int): frame per second of gif.
+
+                    rotation_style (str): rotation style.
+ 
+            Returns:
+                    None. Gif written to disk directly.
+    """
     # Convert magical girls to doppels.
     arr_res1 = doppelize(path_img1, doppel_size, 1.5, 0)
     arr_res2 = doppelize(path_img2, doppel_size)
