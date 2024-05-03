@@ -144,7 +144,7 @@ def rise_chaos(arr_doppel1:np.ndarray, arr_doppel2:np.ndarray) -> np.ndarray:
 
 
 
-def point_cloud(path_img1:str, path_img2:str, path_out:str, doppel_size:int=3, angle_deg:float=2, fps:int=30):
+def point_cloud(path_img1:str, path_img2:str, path_out:str, doppel_size:int, angle_deg:float, fps:int, rotation_style:str):
     # Convert magical girls to doppels.
     arr_res1 = doppelize(path_img1, doppel_size, 1.5, 0)
     arr_res2 = doppelize(path_img2, doppel_size)
@@ -168,24 +168,27 @@ def point_cloud(path_img1:str, path_img2:str, path_out:str, doppel_size:int=3, a
     #plotter.show()
     #_breakpoint()
 
-    # 360°
-    plotter.open_gif(path_out, fps=fps, subrectangles=True)
-    plotter.write_frame() # write the first frame before rotating
-    for _ in tqdm(np.linspace(0, 360, int(360/angle_deg))[:-1]):
-        pdata.rotate_z(angle_deg, point=point_of_rotation_center, inplace=True)
-        plotter.write_frame()
-    plotter.close()
+    if rotation_style == "360":
+        # 360°
+        plotter.open_gif(path_out, fps=fps, subrectangles=True)
+        plotter.write_frame() # write the first frame before rotating
+        for _ in tqdm(np.linspace(0, 360, int(360/angle_deg))[:-1]):
+            pdata.rotate_z(angle_deg, point=point_of_rotation_center, inplace=True)
+            plotter.write_frame()
+        plotter.close()
 
-    # 90° * 2
-    #_plotter.open_gif(path_out, fps=fps, subrectangles=True)
-    #_plotter.write_frame() # write the first frame before rotating
-    #_for _ in tqdm(np.linspace(0, 90, int(90/angle_deg))[:-1]):
-    #_    pdata.rotate_z(-1*angle_deg, point=point_of_rotation_center, inplace=True)
-    #_    plotter.write_frame()
-    #_for _ in tqdm(np.linspace(0, 90, int(90/angle_deg))[:-1]):
-    #_    pdata.rotate_z(angle_deg, point=point_of_rotation_center, inplace=True)
-    #_    plotter.write_frame()
-    #_plotter.close()
+    if rotation_style == "90":
+        #90° * 2
+        plotter.open_gif(path_out, fps=fps, subrectangles=True)
+        plotter.write_frame() # write the first frame before rotating
+        for _ in tqdm(np.linspace(0, 90, int(90/angle_deg))[:-1]):
+            pdata.rotate_z(-1*angle_deg, point=point_of_rotation_center, inplace=True)
+            plotter.write_frame()
+        for _ in tqdm(np.linspace(0, 90, int(90/angle_deg))[:-1]):
+            pdata.rotate_z(angle_deg, point=point_of_rotation_center, inplace=True)
+            plotter.write_frame()
+        plotter.close()
+
     print(f"Gif written to {path_out}")
 
 
