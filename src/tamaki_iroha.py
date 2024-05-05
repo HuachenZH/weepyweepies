@@ -5,6 +5,7 @@ import cv2
 import matplotlib.pyplot as plt
 import pyvista
 import pdb
+from tqdm import tqdm
 
 
 
@@ -82,7 +83,7 @@ def doppel(arr_img:np.ndarray, doppel_size:int) -> np.ndarray:
     # Initialize result array
     arr_res = np.zeros((arr_img.shape[0]*doppel_size, arr_img.shape[1]*doppel_size))
     # iterate through each unique value in arr_img
-    for i in np.unique(arr_img):
+    for i in tqdm(np.unique(arr_img)):
         arr_img_clone = copy.deepcopy(arr_img)
         # only keep i, set others to 0
         arr_img_clone[np.where(arr_img_clone!=i)] = 0

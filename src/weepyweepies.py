@@ -5,7 +5,7 @@ from point_cloud import point_cloud
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-d", "--doppelSize", help="Doppel size", choices=[3,5])
+    parser.add_argument("-d", "--doppelSize", help="Doppel size", choices=["3","5"])
     parser.add_argument("-i1", "--inputImage1", help="Input image 1, will be on xz plane", type=str)
     parser.add_argument("-i2", "--inputImage2", help="Input image 2, will be on yz plane", type=str)
     parser.add_argument("-o", "--outputPath", help="Path to the output image", type=str)
@@ -19,10 +19,10 @@ def get_args():
 
 def main():
     args = get_args()
-    point_cloud(args.inputImage1, args.inputImage2, args.outputPath, args.doppelSize, args.angleDegree, args.fps, args.rotationStyle)
+    point_cloud(args.inputImage1, args.inputImage2, args.outputPath, int(args.doppelSize), args.angleDegree, args.fps, args.rotationStyle)
 
 
-# python3 weepyweepies.py -d 5 -i1 ../data/img1.jpg -i2 ../data/img2.jpg -o ../data/output.gif -a 2 -f 30
+# python3 weepyweepies.py -d 5 -i1 ../data/euler.jpg -i2 ../data/cauchy.jpg -o ../data/euler_cauchy.gif -a 1.5 -f 20 -r 360
 
-if __name__ == "_main__":
+if __name__ == "__main__":
     main()

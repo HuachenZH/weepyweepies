@@ -166,14 +166,19 @@ def point_cloud(path_img1:str, path_img2:str, path_out:str, doppel_size:int, ang
                     None. Gif written to disk directly.
     """
     # Convert magical girls to doppels.
+    print("Start data processing")
+    print('"Doppelization" in progress')
     arr_res1 = doppelize(path_img1, doppel_size, 1.5, 0)
     arr_res2 = doppelize(path_img2, doppel_size)
 
     # Mesh the two image, end of data processing, start of visualization
+    print("End data processing\n")
+    print("Start visualization")
     arr_f_chaos = rise_chaos(arr_res1, arr_res2)
     pdata = pyvista.PolyData(arr_f_chaos)
 
     # Free some memory
+    print("Clearing mugs, serving pint")
     point_of_rotation_center = (max(arr_f_chaos[:, 0])/2, max(arr_f_chaos[:, 1])/2, max(arr_f_chaos[:, 2])/2)
     del arr_f_chaos
     del arr_res1
@@ -209,6 +214,7 @@ def point_cloud(path_img1:str, path_img2:str, path_out:str, doppel_size:int, ang
             plotter.write_frame()
         plotter.close()
 
+    print("End visualization")
     print(f"Gif written to {path_out}")
 
 
